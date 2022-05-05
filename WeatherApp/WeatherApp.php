@@ -264,7 +264,7 @@
 		                	'<td>' + value.weather[0].description + '</td>' + 
 		                	'<td>' + value.clouds.all + '%</td>' + 
 		                	'<td>' + value.wind.speed + 'm/s</td>' + 
-		                	'<td>' + value.wind.deg + 'm/s</td>' + 
+		                	'<td>' + value.wind.deg + '</td>' + 
 		                	'<td>' + value.wind.gust + 'm/s</td>' + 
 		                	'<td>' + value.visibility + 'm</td>' + 
 		                	'<td>' + precip + '</td>' + 
