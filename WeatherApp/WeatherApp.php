@@ -7,7 +7,7 @@
 	body, td, th {
 		font-family: sans-serif;
 		position: relative;
-		font-size: 0.8em;
+		font-size: 0.8rem;
 	}
 	#table td, th {
 		text-align: center;
@@ -23,9 +23,9 @@
 	}
 	legend {
 		font-style: italic;
-		font-size: 1.1em;
+		font-size: 0.9rem;
 	}
-	button {
+	button, .back_top {
 		border-radius: 6px;
 		border: none;
 		background-color: #4CAF50;
@@ -37,6 +37,16 @@
   		position: relative;
   		width: 150px;
   		padding: 10px 1px;
+	}
+	.back_top {
+		width: 70px;
+		margin: 0 auto;
+	}
+	#table.dataTable tbody tr:hover {
+	  background-color: #ffa;
+	}
+	#table.dataTable thead th {
+	  background-color: #e0e0e0;
 	}
 </style>
 
@@ -50,10 +60,13 @@
 <body>
 
 	<div style="float: right; margin-top: -30px;">
-		<img src="icons/icon-stormy-weather.png" height="50em" alt="icon_weather">
+		<img src="icons/icon-stormy-weather.png" height="50rem" alt="icon_weather">
 	</div>
+
 	<p>Welcome, Traveller! Use this app to check the weather from the cities listed below.</p><hr>
 	<p></p>
+	<a name="top" id="top"></a>
+
 	<form>
 
 		<div>
@@ -68,7 +81,6 @@
 			<button id='submit'>SUBMIT</button>
 			<div id='restrictions'></div>
 		</div>
-
 		<p></p>
 
 		<fieldset>
@@ -117,7 +129,7 @@
 	                <th rowspan=2>Precipitation</th>
 	            </tr>
 				<tr>
-	                <th>Temperature (K)</th>
+	                <th>Temperature</th>
 	                <th>Temp. Feels Like</th>
 	                <th>Min. Temp.</th>
 	                <th>Max. Temp.</th>
@@ -135,8 +147,12 @@
 	        </thead>
             <tbody id = 'list'> </tbody>
 		</table>
-		
+		<p>&nbsp;</p>
+
+		<div class='back_top'><a href="#top" style="text-decoration: none; color: white;">Back to top</a></div>
+
 	</form>
+
 </body>
 
 
@@ -180,6 +196,12 @@
 		        	var row = '';
 		            $.each(result.list, function (key, value) {
 
+						var someTableDT = $("#table").on("draw.dt", function () {
+						    $(this).find(".dataTables_empty").parents('tbody').empty();
+						}).DataTable();
+						var table = $('#table').DataTable();
+						table.clear().draw();
+
 		            	var precip = '';
 		            	if ( value.pop == 1 ) {
 		            		precip = '100%';
@@ -204,7 +226,7 @@
 							img_weather = 'icons-light-rain';
 						} else if ( weather == 'moderate rain' ) {
 							img_weather = 'icons-moderate-rain';
-						} else if ( weather == 'heavy rain' ) {
+						} else if ( weather == 'heavy intensity rain' ) {
 							img_weather = 'icons-heavy-rain';
 						} else if ( weather == 'few clouds' ) {
 							img_weather = 'icons-cloud-few';
@@ -216,21 +238,26 @@
 							img_weather = 'icons-cloud-overcast';
 						}
 
+						// Convert kelvin to celsius
+						var temp = Math.round(value.main.temp - 273.15);
+						var feels_like = Math.round(value.main.feels_like - 273.15);
+						var temp_min = Math.round(value.main.temp_min - 273.15);
+						var temp_max = Math.round(value.main.temp_max - 273.15);
+
 		                // Display JSON objects as table rows
 		                row += '<tr>' + 
-		                	'<td>' + date + '</td>' + 
-		                	'<td>' + time + '</td>' + 
-		                	'<td>' + value.main.temp + '</td>' + 
-		                	'<td>' + value.main.feels_like + '</td>' + 
-		                	'<td>' + value.main.temp_min + '</td>' + 
-		                	'<td>' + value.main.temp_max + '</td>' + 
+		                	'<td style="white-space: nowrap;">' + date + '</td>' + 
+		                	'<td style="white-space: nowrap;">' + time + '</td>' + 
+		                	'<td>' + temp + '°C </td>' + 
+		                	'<td>' + feels_like + '°C </td>' + 
+		                	'<td>' + temp_min + '°C </td>' + 
+		                	'<td>' + temp_max + '°C </td>' + 
 		                	'<td>' + value.main.pressure + '</td>' + 
 		                	'<td>' + value.main.sea_level + '</td>' + 
 		                	'<td>' + value.main.grnd_level + '</td>' + 
 		                	'<td>' + value.main.humidity + '</td>' + 
 		                	'<td>' + value.main.temp_kf + '</td>' + 
-		                	// '<td>' + value.weather[0].main + '</td>' + 
-		                	'<td><img src="icons/' + img_weather + '.png" height="30em" alt="weather"></td>' + 
+		                	'<td><img src="icons/' + img_weather + '.png" height="30rem" alt="weather"></td>' + 
 		                	'<td>' + value.weather[0].description + '</td>' + 
 		                	'<td>' + value.clouds.all + '</td>' + 
 		                	'<td>' + value.wind.speed + '</td>' + 
@@ -278,9 +305,13 @@
 		  		$('#res_address').text(result.features[0].properties.formatted);
 		  		$('#res_latitude').text(result.features[0].properties.lat);
 		  		$('#res_longitude').text(result.features[0].properties.lon);
-		  		$('#res_website').html('<a href="'+result.features[0].properties.website+'">'+result.features[0].properties.website+'</a>');
+		  		if ( !result.features[0].properties.website == false ) {
+		  			$('#res_website').html('<a href="'+result.features[0].properties.website+'">'+result.features[0].properties.website+'</a>');
+		  		} else { $('#res_website').text(''); }
 		  		$('#res_sourcename').text(result.features[0].properties.datasource.sourcename);
-		  		$('#res_sourceurl').html('<a href="'+result.features[0].properties.datasource.url+'">'+result.features[0].properties.datasource.url+'</a>');
+		  		if ( !result.features[0].properties.datasource.url == false ) {
+		  			$('#res_sourceurl').html('<a href="'+result.features[0].properties.datasource.url+'">'+result.features[0].properties.datasource.url+'</a>');
+		  		} else { $('#res_sourceurl').text(''); }
 		  	})
 		  .catch(error => console.log('error', error));
 	}
