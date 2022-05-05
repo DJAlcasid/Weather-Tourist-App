@@ -50,11 +50,16 @@
 	}
 </style>
 
-<title> Weather App </title>
+<title> Weather Tourist App </title>
 
 <head>
-	<h3>WEATHER APP</h3>
-	<link rel="icon" type="image/png" sizes="96x96" href="/icon-stormy-weather.png">
+	<link rel="icon"href="icons/icon-stormy-weather.png" />
+	<table>
+		<tr>
+			<td><img src="icons/icon-stormy-weather.png" height="40rem" alt="icon_weather"></td>
+			<td><div style="padding: 1px 0"><h3>WEATHER TOURIST APP</h3></div></td>
+		</tr>
+	</table>
 </head>
 
 <body>
@@ -121,11 +126,11 @@
 				<tr>
 	                <th rowspan=2>Date</th>
 	                <th rowspan=2>Time</th>
-	                <th colspan=9 style="background-color: #fcf4dd">Main</th>
+	                <th colspan=8 style="background-color: #fcf4dd">Main</th>
 	                <th colspan=2 style="background-color: #daeaf6">Weather</th>
 	                <th rowspan=2>Clouds</th>
 	                <th colspan=3 style="background-color: #ddedea">Wind</th>
-	                <th rowspan=2>Visibility</th>
+	                <th rowspan=2>Visibility (max. val. = 10km)</th>
 	                <th rowspan=2>Precipitation</th>
 	            </tr>
 				<tr>
@@ -137,7 +142,6 @@
 	                <th>Sea Level</th>
 	                <th>Ground Level</th>
 	                <th>Humidity</th>
-	                <th>Temp. KF</th>
 	                <th>Weather</th>
 	                <th>Description</th>
 	                <th>Speed</th>
@@ -252,18 +256,17 @@
 		                	'<td>' + feels_like + '°C </td>' + 
 		                	'<td>' + temp_min + '°C </td>' + 
 		                	'<td>' + temp_max + '°C </td>' + 
-		                	'<td>' + value.main.pressure + '</td>' + 
-		                	'<td>' + value.main.sea_level + '</td>' + 
-		                	'<td>' + value.main.grnd_level + '</td>' + 
-		                	'<td>' + value.main.humidity + '</td>' + 
-		                	'<td>' + value.main.temp_kf + '</td>' + 
+		                	'<td>' + value.main.pressure + ' hPa</td>' + 
+		                	'<td>' + value.main.sea_level + ' hPa</td>' + 
+		                	'<td>' + value.main.grnd_level + ' hPa</td>' + 
+		                	'<td>' + value.main.humidity + '%</td>' + 
 		                	'<td><img src="icons/' + img_weather + '.png" height="30rem" alt="weather"></td>' + 
 		                	'<td>' + value.weather[0].description + '</td>' + 
-		                	'<td>' + value.clouds.all + '</td>' + 
-		                	'<td>' + value.wind.speed + '</td>' + 
-		                	'<td>' + value.wind.deg + '</td>' + 
-		                	'<td>' + value.wind.gust + '</td>' + 
-		                	'<td>' + value.visibility  + '</td>' + 
+		                	'<td>' + value.clouds.all + '%</td>' + 
+		                	'<td>' + value.wind.speed + 'm/s</td>' + 
+		                	'<td>' + value.wind.deg + 'm/s</td>' + 
+		                	'<td>' + value.wind.gust + 'm/s</td>' + 
+		                	'<td>' + value.visibility + 'm</td>' + 
 		                	'<td>' + precip + '</td>' + 
 		                '</tr>';
 		            });
