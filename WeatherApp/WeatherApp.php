@@ -220,7 +220,7 @@
 
 						var time = date.toLocaleString('default', { hour: '2-digit', minute: '2-digit' });
 
-						date = mm + ' ' + dd + ' ,' + yyyy;
+						date = mm + ' ' + dd + ', ' + yyyy;
 
 						var weather = value.weather[0].description;
 						var img_weather = '';
