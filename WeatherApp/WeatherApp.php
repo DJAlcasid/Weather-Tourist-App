@@ -126,6 +126,34 @@
 		</fieldset>
 		<p></p>
 
+		<fieldset>
+			<legend>Upcoming Weather:</legend>
+			<div style="padding: 10px;">
+				<div style="margin: 0 0 10px 0; color: #4CAF50;"><span id="up_today"></span></div>
+				<table width=80%>
+					<tr>
+						<td rowspan=3 width=10%><span id="up_icon"></span></td>
+						<td rowspan=3 width=10%><div style=" font-weight: bold; font-size: 2.8rem;"><span id="up_temp"></span></div></td>
+						<td width=5%><span id="up_cels"></span></td>
+						<td width=10%><span id="up_lbl_prec"></span></td>
+						<td width=10%><span id="up_prec"></span></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td><span id="up_lbl_humid"></span></td>
+						<td><span id="up_humid"></span></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td><span id="up_lbl_wind"></span></td>
+						<td><span id="up_wind"></span></td>
+						<td>&nbsp;</td>
+					</tr>
+				</table>
+			</div>
+		</fieldset>
+		<p></p>
+
 		<table id='table'>
 			<thead>
 				<tr>
@@ -206,56 +234,70 @@
 						var table = $('#table').DataTable();
 						table.clear().draw();
 
-		            	var precip = '';
-		            	if ( value.pop == 1 ) {
-		            		precip = '100%';
-		            	} else if ( value.pop == 0 ) {
-		            		precip = '0%';
-		            	}
+		            	var dates = new Date(value.dt_txt);
+		    			const yyyy = dates.getFullYear();
+						let mm = dates.toLocaleString('default', { month: 'long' });
+						let dd = dates.getDate();
 
-		            	var date = new Date(value.dt_txt);
-		    			const yyyy = date.getFullYear();
-						let mm = date.toLocaleString('default', { month: 'long' });
-						let dd = date.getDate();
-
-						var time = date.toLocaleString('default', { hour: '2-digit', minute: '2-digit' });
+						var time = dates.toLocaleString('default', { hour: '2-digit', minute: '2-digit' });
 
 						date = mm + ' ' + dd + ', ' + yyyy;
 
-						var weather = value.weather[0].description;
-						var img_weather = '';
-						if ( weather == 'clear sky' ) {
-							img_weather = 'icons-sun';
-						} else if ( weather == 'light rain' ) {
-							img_weather = 'icons-light-rain';
-						} else if ( weather == 'moderate rain' ) {
-							img_weather = 'icons-moderate-rain';
-						} else if ( weather == 'heavy intensity rain' ) {
-							img_weather = 'icons-heavy-rain';
-						} else if ( weather == 'few clouds' ) {
-							img_weather = 'icons-cloud-few';
-						} else if ( weather == 'scattered clouds' ) {
-							img_weather = 'icons-cloud-scattered';
-						} else if ( weather == 'broken clouds' ) {
-							img_weather = 'icons-cloud-broken';
-						} else if ( weather == 'overcast clouds' ) {
-							img_weather = 'icons-cloud-overcast';
+						// Displaying upcoming weather
+						var today = new Date();
+						const today_yyyy = today.getFullYear();
+						let today_mm = today.toLocaleString('default', { month: 'long' });
+						let today_dd = today.getDate();
+						var today_date = today_mm + ' ' + today_dd + ', ' + today_yyyy;
+
+						var today_time = today.toLocaleString('default', { hour: '2-digit', minute: '2-digit' });
+
+						if ( today_date == date ) {
+							var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+							var day_name = weekday[dates.getDay()];
+							if ( today_time <= time ) {
+								$('#up_today').html('<b>' + date + ', ' + day_name + ' ' + time + '</b>');
+								$('#up_icon').html('<img src="icons/' + getWeatherImg(value.weather[0].description) + '.png" height="80rem" alt="weather">');
+								$('#up_temp').text(getCelsius(value.main.temp) + '°C');
+								$('#up_lbl_prec').text('Precipitation:');
+								$('#up_prec').text(getPrecipitation(value.pop));
+								$('#up_lbl_humid').text('Humidity:');
+								$('#up_humid').text(value.main.humidity+'%');
+								$('#up_lbl_wind').text('Wind:');
+								$('#up_wind').text(value.wind.speed+'m/s');
+							} else if ( today_time > time ) {
+								var value = result.list[key+1];
+
+								var dates = new Date(value.dt_txt);
+				    			const yyyy = dates.getFullYear();
+								let mm = dates.toLocaleString('default', { month: 'long' });
+								let dd = dates.getDate();
+								date = mm + ' ' + dd + ', ' + yyyy;
+								var time = dates.toLocaleString('default', { hour: '2-digit', minute: '2-digit' });
+
+								$('#up_today').html('<b>' + date + ', ' + day_name + ' ' + time + '</b>');
+								$('#up_icon').html('<img src="icons/' + getWeatherImg(value.weather[0].description) + '.png" height="80rem" alt="weather">');
+								$('#up_temp').text(getCelsius(value.main.temp) + '°C');
+								$('#up_lbl_prec').text('Precipitation:');
+								$('#up_prec').text(getPrecipitation(value.pop));
+								$('#up_lbl_humid').text('Humidity:');
+								$('#up_humid').text(value.main.humidity+'%');
+								$('#up_lbl_wind').text('Wind:');
+								$('#up_wind').text(value.wind.speed+'m/s');
+							}
 						}
 
-						// Convert kelvin to celsius
-						var temp = Math.round(value.main.temp - 273.15);
-						var feels_like = Math.round(value.main.feels_like - 273.15);
-						var temp_min = Math.round(value.main.temp_min - 273.15);
-						var temp_max = Math.round(value.main.temp_max - 273.15);
+						var weather = value.weather[0].description;
+						var img_weather = getWeatherImg(weather);
 
 		                // Display JSON objects as table rows
 		                row += '<tr>' + 
 		                	'<td style="white-space: nowrap;">' + date + '</td>' + 
 		                	'<td style="white-space: nowrap;">' + time + '</td>' + 
-		                	'<td>' + temp + '°C </td>' + 
-		                	'<td>' + feels_like + '°C </td>' + 
-		                	'<td>' + temp_min + '°C </td>' + 
-		                	'<td>' + temp_max + '°C </td>' + 
+		                	'<td>' + getCelsius(value.main.temp) + '°C </td>' + 
+		                	'<td>' + getCelsius(value.main.feels_like) + '°C </td>' + 
+		                	'<td>' + getCelsius(value.main.temp_min) + '°C </td>' + 
+		                	'<td>' + getCelsius(value.main.temp_max) + '°C </td>' + 
 		                	'<td>' + value.main.pressure + ' hPa</td>' + 
 		                	'<td>' + value.main.sea_level + ' hPa</td>' + 
 		                	'<td>' + value.main.grnd_level + ' hPa</td>' + 
@@ -267,7 +309,7 @@
 		                	'<td>' + value.wind.deg + '</td>' + 
 		                	'<td>' + value.wind.gust + 'm/s</td>' + 
 		                	'<td>' + value.visibility + 'm</td>' + 
-		                	'<td>' + precip + '</td>' + 
+		                	'<td>' + getPrecipitation(value.pop) + '</td>' + 
 		                '</tr>';
 		            });
 		              
@@ -317,6 +359,50 @@
 		  		} else { $('#res_sourceurl').text(''); }
 		  	})
 		  .catch(error => console.log('error', error));
+	}
+
+	// Get image file names
+	function getWeatherImg(weather) {
+
+		var img_weather = '';
+		if ( weather == 'clear sky' ) {
+			img_weather = 'icons-sun';
+		} else if ( weather == 'light rain' ) {
+			img_weather = 'icons-light-rain';
+		} else if ( weather == 'moderate rain' ) {
+			img_weather = 'icons-moderate-rain';
+		} else if ( weather == 'heavy intensity rain' ) {
+			img_weather = 'icons-heavy-rain';
+		} else if ( weather == 'few clouds' ) {
+			img_weather = 'icons-cloud-few';
+		} else if ( weather == 'scattered clouds' ) {
+			img_weather = 'icons-cloud-scattered';
+		} else if ( weather == 'broken clouds' ) {
+			img_weather = 'icons-cloud-broken';
+		} else if ( weather == 'overcast clouds' ) {
+			img_weather = 'icons-cloud-overcast';
+		}
+
+		return img_weather;
+	}
+
+	// Get value converted to celsius
+	function getCelsius(kelvin) {
+		var celsius = Math.round(kelvin - 273.15);
+		return celsius;
+	}
+
+	// Get value of precipitation
+	function getPrecipitation(value) {
+
+		var precip = '';
+    	if ( value == 1 ) {
+    		precip = '100%';
+    	} else if ( value == 0 ) {
+    		precip = '0%';
+    	}
+
+    	return precip;
 	}
 
 
