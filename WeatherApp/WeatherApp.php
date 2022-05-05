@@ -9,6 +9,11 @@
 		position: relative;
 		font-size: 0.8rem;
 	}
+	#restrictions {
+		display: inline;
+		color: red;
+		font-weight: bold;
+	}
 	#table td, th {
 		text-align: center;
 	}
@@ -84,7 +89,7 @@
 				<option value="Nagoya">Nagoya</option>
 			</select>
 			<button id='submit'>SUBMIT</button>
-			<div id='restrictions'></div>
+			<span id='restrictions'></span>
 		</div>
 		<p></p>
 
@@ -119,8 +124,8 @@
 				</table>
 			</div>
 		</fieldset>
-
 		<p></p>
+
 		<table id='table'>
 			<thead>
 				<tr>
@@ -179,12 +184,7 @@
 		var city = $('#city').val()
 
 		if ( !city ) {
-			$id = 'restrictions';
-			document.getElementById($id).style.display = 'inline'
-			document.getElementById($id).style.color = 'red'
-			document.getElementById($id).style.fontWeight = 'bold'
-			document.getElementById($id).style.lineHeight = 'normal'
-			document.getElementById($id).innerHTML = 'Please select a city.'
+			$('#restrictions').text('Please select a city.')
 		} else {
 
 			// OpenWeather API
