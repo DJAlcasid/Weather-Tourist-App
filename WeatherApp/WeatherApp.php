@@ -132,11 +132,11 @@
 				<div style="margin: 0 0 10px 0; color: #4CAF50;"><span id="up_today"></span></div>
 				<table width=80%>
 					<tr>
-						<td rowspan=3 width=10%><span id="up_icon"></span></td>
-						<td rowspan=3 width=10%><div style=" font-weight: bold; font-size: 2.8rem;"><span id="up_temp"></span></div></td>
-						<td width=5%><span id="up_cels"></span></td>
+						<td rowspan=3 width=15%><span id="up_icon"></span></td>
+						<td rowspan=3 width=20%><div style=" font-weight: bold; font-size: 2.8rem;"><span id="up_temp"></span></div></td>
+						<td width=15%><span id="up_cels"></span></td>
 						<td width=10%><span id="up_lbl_prec"></span></td>
-						<td width=10%><span id="up_prec"></span></td>
+						<td width=20%><span id="up_prec"></span></td>
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
@@ -243,50 +243,6 @@
 
 						date = mm + ' ' + dd + ', ' + yyyy;
 
-						// Displaying upcoming weather
-						var today = new Date();
-						const today_yyyy = today.getFullYear();
-						let today_mm = today.toLocaleString('default', { month: 'long' });
-						let today_dd = today.getDate();
-						var today_date = today_mm + ' ' + today_dd + ', ' + today_yyyy;
-
-						var today_time = today.toLocaleString('default', { hour: '2-digit', minute: '2-digit' });
-
-						if ( today_date == date ) {
-							var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-							var day_name = weekday[dates.getDay()];
-							if ( today_time <= time ) {
-								$('#up_today').html('<b>' + date + ', ' + day_name + ' ' + time + '</b>');
-								$('#up_icon').html('<img src="icons/' + getWeatherImg(value.weather[0].description) + '.png" height="80rem" alt="weather">');
-								$('#up_temp').text(getCelsius(value.main.temp) + '°C');
-								$('#up_lbl_prec').text('Precipitation:');
-								$('#up_prec').text(getPrecipitation(value.pop));
-								$('#up_lbl_humid').text('Humidity:');
-								$('#up_humid').text(value.main.humidity+'%');
-								$('#up_lbl_wind').text('Wind:');
-								$('#up_wind').text(value.wind.speed+'m/s');
-							} else if ( today_time > time ) {
-								var value = result.list[key+1];
-
-								var dates = new Date(value.dt_txt);
-				    			const yyyy = dates.getFullYear();
-								let mm = dates.toLocaleString('default', { month: 'long' });
-								let dd = dates.getDate();
-								date = mm + ' ' + dd + ', ' + yyyy;
-								var time = dates.toLocaleString('default', { hour: '2-digit', minute: '2-digit' });
-
-								$('#up_today').html('<b>' + date + ', ' + day_name + ' ' + time + '</b>');
-								$('#up_icon').html('<img src="icons/' + getWeatherImg(value.weather[0].description) + '.png" height="80rem" alt="weather">');
-								$('#up_temp').text(getCelsius(value.main.temp) + '°C');
-								$('#up_lbl_prec').text('Precipitation:');
-								$('#up_prec').text(getPrecipitation(value.pop));
-								$('#up_lbl_humid').text('Humidity:');
-								$('#up_humid').text(value.main.humidity+'%');
-								$('#up_lbl_wind').text('Wind:');
-								$('#up_wind').text(value.wind.speed+'m/s');
-							}
-						}
-
 						var weather = value.weather[0].description;
 						var img_weather = getWeatherImg(weather);
 
@@ -311,10 +267,59 @@
 		                	'<td>' + value.visibility + 'm</td>' + 
 		                	'<td>' + getPrecipitation(value.pop) + '</td>' + 
 		                '</tr>';
+
+
+						// Displaying upcoming weather
+						var today = new Date();
+						const today_yyyy = today.getFullYear();
+						let today_mm = today.toLocaleString('default', { month: 'long' });
+						let today_dd = today.getDate();
+						var today_date = today_mm + ' ' + today_dd + ', ' + today_yyyy;
+
+						var today_time = today.toLocaleString('default', { hour: '2-digit', minute: '2-digit' });
+
+						if ( today_date == date ) {
+							var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+							var day_name = weekday[dates.getDay()];
+							
+							if ( today_time <= time ) {
+								$('#up_today').html('<b>' + date + ', ' + day_name + ' ' + time + '</b>');
+								$('#up_icon').html('<img src="icons/' + getWeatherImg(value.weather[0].description) + '.png" height="80rem" alt="weather">');
+								$('#up_temp').text(getCelsius(value.main.temp) + '°C');
+								$('#up_lbl_prec').text('Precipitation:');
+								$('#up_prec').text(getPrecipitation(value.pop));
+								$('#up_lbl_humid').text('Humidity:');
+								$('#up_humid').text(value.main.humidity+'%');
+								$('#up_lbl_wind').text('Wind:');
+								$('#up_wind').text(value.wind.speed+'m/s');
+							} else if ( today_time > time ) {
+								var value_plus = result.list[key+1];
+
+								var dates = new Date(value_plus.dt_txt);
+				    			const yyyy = dates.getFullYear();
+								let mm = dates.toLocaleString('default', { month: 'long' });
+								let dd = dates.getDate();
+								date = mm + ' ' + dd + ', ' + yyyy;
+								var time = dates.toLocaleString('default', { hour: '2-digit', minute: '2-digit' });
+
+								$('#up_today').html('<b>' + date + ', ' + day_name + ' ' + time + '</b>');
+								$('#up_icon').html('<img src="icons/' + getWeatherImg(value_plus.weather[0].description) + '.png" height="80rem" alt="weather">');
+								$('#up_temp').text(getCelsius(value_plus.main.temp) + '°C');
+								$('#up_lbl_prec').text('Precipitation:');
+								$('#up_prec').text(getPrecipitation(value_plus.pop));
+								$('#up_lbl_humid').text('Humidity:');
+								$('#up_humid').text(value_plus.main.humidity+'%');
+								$('#up_lbl_wind').text('Wind:');
+								$('#up_wind').text(value_plus.wind.speed+'m/s');
+							}
+
+						}
+
 		            });
 		              
 		            // Inserting rows to table
 		            $("#table tbody#list").append(row);
+
 
 				}, 
 				error: function(error){
