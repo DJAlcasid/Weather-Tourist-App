@@ -13,7 +13,7 @@ Welcome fellow developer! This project is a simple web app that can be used or a
 
 This project was developed from scratch in short time due to my complicated schedule, so expect it to be very simple with minimalist user interface. Minimalist user interface is an advantage especially for users who will be using this app while travelling (user friendly, and easy to read) This can be accessed through any web browsers. Although this is simple, all functions are working perfectly which is the most important.
 
-I applied some of my learned practices during my experience, & from the referenced coding standards.  
+I applied some of my learned practices during my experience, & from the referenced coding standards. I tried my best to apply the best practices in coding in my short period of time.
 
 There's so much room for improvements in this project, and I am very much open for any improvements, corrections, and recommendations.
 
